@@ -14,11 +14,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-RTEMS_VERSION=4.11
+TARGET=lm32-elf
+
 #make sure you have wrtie access
 LM32_PREFIX=/opt/LM32/lm32-elf
 
-LM32_SOURCES_URL=http://www.rtems.org/ftp/pub/rtems/SOURCES/$(RTEMS_VERSION)
+LM32_SOURCES_URL=http://www.rtems.org/ftp/pub/rtems/SOURCES/4.11
 
 # For Mac OS X use curl.
 WGET=wget -c -O
@@ -42,9 +43,6 @@ MPFR=mpfr-$(MPFR_VERSION).tar.bz2
 
 DL=$(if $(wildcard ../dl/.),../dl,dl)
 
-#RTEMS_PATCHES_DIR=rtems-patches
-#MM1_PATCHES_DIR=milkymist-one-patches
-
 # make sure this rule stays at top
 all: .install.gdb.ok .install.gcc.ok
 
@@ -58,7 +56,7 @@ all: .install.gdb.ok .install.gcc.ok
 	export PATH=$(LM32_PREFIX)/bin:$$PATH
 	mkdir -p b-gcc
 	cd b-gcc/ && \
-	  ../gcc-$(GCC_CORE_VERSION)/configure --target=lm32-rtems4.11 \
+	  ../gcc-$(GCC_CORE_VERSION)/configure --target=${TARGET} \
 	  --with-gnu-as --with-gnu-ld --with-newlib --verbose \
 	  --enable-threads --enable-languages="c" --disable-shared \
 	  --prefix=$(LM32_PREFIX)
@@ -74,7 +72,7 @@ all: .install.gdb.ok .install.gcc.ok
 .compile.binutils.ok: .unzip.ok  # .patch.ok
 	mkdir -p b-binutils
 	cd b-binutils && \
-	 ../binutils-$(BINUTILS_VERSION)/configure --target=lm32-rtems4.11 \
+	 ../binutils-$(BINUTILS_VERSION)/configure --target=${TARGET} \
 	 --prefix=$(LM32_PREFIX)
 	$(MAKE) -C b-binutils all
 	$(MAKE) -C b-binutils info
@@ -107,7 +105,7 @@ gcc-$(GCC_CORE_VERSION)/newlib: .unzip.ok
 .compile.gdb.ok: .install.binutils.ok .unzip.ok #.patch.ok
 	export PATH=$(LM32_PREFIX)/bin:$$PATH
 	mkdir -p b-gdb
-	cd b-gdb/ && ../gdb-$(GDB_VERSION)/configure --target=lm32-rtems4.11 \
+	cd b-gdb/ && ../gdb-$(GDB_VERSION)/configure --target=${TARGET} \
 	  --prefix=$(LM32_PREFIX)
 	$(MAKE) -C b-gdb all
 	touch $@
