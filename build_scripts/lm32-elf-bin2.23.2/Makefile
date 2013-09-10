@@ -17,15 +17,16 @@
 TARGET=lm32-elf
 
 #make sure you have wrtie access
-LM32_PREFIX=/opt/LM32/GCC454-GDB741
+LM32_PREFIX=/opt/LM32/GCC454-GDB741-BIN2232
 
 LM32_SOURCES_URL=http://www.rtems.org/ftp/pub/rtems/SOURCES/4.11
+GNU_SRC_URL=http://ftp.gnu.org/gnu/binutils
 
 # For Mac OS X use curl.
 WGET=wget -c -O
 # WGET=curl -o
 
-BINUTILS_VERSION=2.22
+BINUTILS_VERSION=2.23.2
 GCC_CORE_VERSION=4.5.4
 NEWLIB_VERSION=1.20.0
 GDB_VERSION=7.4.1
@@ -112,7 +113,7 @@ gcc-$(GCC_CORE_VERSION)/newlib: .unzip.ok
 
 $(DL)/$(BINUTILS).ok:
 	mkdir -p $(DL)
-	$(WGET) $(DL)/$(BINUTILS) $(LM32_SOURCES_URL)/$(BINUTILS)
+	$(WGET) $(DL)/$(BINUTILS) $(GNU_SRC_URL)/$(BINUTILS)
 	touch $@
 
 $(DL)/$(GCC_CORE).ok:
